@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const UserModel = require("../models/UserModels");
 const nodemailer = require("nodemailer");
 
 router.post("/login", async (req, res, next) => {
@@ -68,10 +67,8 @@ router.post("/signup", async (req, res, next) => {
       });
     }
 
-
     const generatedPassword = Math.random().toString(36).slice(-8); // Random 8-character password
     const hashedPassword = await bcrypt.hash(generatedPassword, 10);
-
 
     const newUser = new UserModel({
       emailAddress: emailAddress,
@@ -80,7 +77,6 @@ router.post("/signup", async (req, res, next) => {
     });
 
     await newUser.save();
-
 
     const transporter = nodemailer.createTransport({
       service: "your-email-service-provider",
@@ -117,4 +113,3 @@ router.post("/signup", async (req, res, next) => {
 });
 
 module.exports = router;
-

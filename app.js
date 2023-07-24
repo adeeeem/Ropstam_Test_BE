@@ -5,16 +5,12 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const yaml = require("js-yaml");
-const fs = require("fs");
-const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 
 var indexRouter = require("./routes/index");
-
+var carRoutes = require("./routes/car");
 
 var app = express();
-const carRoutes=require("./routes/car");
 app.use(cors());
 
 // view engine setup
@@ -42,23 +38,6 @@ connect.then(
 
 app.use("/", indexRouter);
 app.use("/car", carRoutes);
-
-try {
-  const swaggerDoc = yaml.load(fs.readFileSync("documentation/swagger.yaml"));
-
-  app.use(
-    "/api-docs",
-    swaggerUi.serveFiles(swaggerDoc),
-    swaggerUi.setup(swaggerDoc, {
-      explorer: true,
-    })
-  );
-  console.log("Swagger Documentation is available to use.");
-} catch (err) {
-  console.log(
-    "Unable to load swagger.yaml. Swagger Documentation not available"
-  );
-}
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
